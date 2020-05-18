@@ -1,0 +1,8 @@
+{
+  "content" : [
+    {
+      "url": "https://myanimelist.net/topanime.php?limit=",
+      "selector": ".ranking-list td.title.al.va-t.word-break .detail .hoverinfo_trigger"
+    }
+  ]
+}
