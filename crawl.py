@@ -15,6 +15,7 @@ Url is typically like https://myanimelist.net/topanime.php?limit=50
 SELECTOR =  ".ranking-list td.title.al.va-t.word-break .detail .hoverinfo_trigger"
 BASE_URL = 'https://myanimelist.net/topanime.php?limit='
 GENRE_ITEMPROP = 'genre'
+DESCRIPTION_ITEMPROP = 'description'
 anime_data = {}
 
 
@@ -51,8 +52,10 @@ def scrape_batch_top_entires(url):
         page = requests.get(t['href'])
         soup = BeautifulSoup(page.content, 'lxml')
         genres_raw = soup.findAll('span', itemprop=GENRE_ITEMPROP)
+        description = soup.find('span', itemprop=DESCRIPTION_ITEMPROP).text
         genres = list(map(lambda x: x.string, genres_raw))
-        print(f'url: {t["href"]} # name: {t.string} # genres:{",".join(genres)}')
+        print(f'url: {t["href"]} \nname: {t.string} '
+              f'\ngenres: {",".join(genres)} \ndescription: {description}')
         print('#########################')
 
 
