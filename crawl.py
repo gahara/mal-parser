@@ -1,4 +1,4 @@
-import requests
+import requests, re
 import json
 from multiprocessing import Pool
 from bs4 import BeautifulSoup
@@ -8,12 +8,14 @@ MULTI = True
 DATA_FILENAME = 'data.json'
 
 STEP = 50
-MAX_COUNT = 300
+MAX_COUNT = 100
 '''
 Url is typically like https://myanimelist.net/topanime.php?limit=50
 '''
 SELECTOR =  ".ranking-list td.title.al.va-t.word-break .detail .hoverinfo_trigger"
 BASE_URL = 'https://myanimelist.net/topanime.php?limit='
+GENRE_ITEMPROP = 'genre'
+anime_data = {}
 
 
 def load_data(filename):
@@ -41,11 +43,18 @@ def scrape_top_entries(data):
 
 
 def scrape_batch_top_entires(url):
+
     res = requests.get(url)
     soup = BeautifulSoup(res.content, 'lxml')
     tmp = soup.select(SELECTOR)
     for t in tmp:
-        print(t.string)
+        page = requests.get(t['href'])
+        soup = BeautifulSoup(page.content, 'lxml')
+        ttt = soup.findAll('span', itemprop='GENRE_ITEMPROP')
+        print(t['href'], t.string)
+        genres = list(map(lambda x: x.string, ttt))
+        print(genres)
+        anime_data[t.string] = [t['href'], genres]
 
 
 def multi():
@@ -73,12 +82,14 @@ def single():
 
 
 def main():
+
     if MULTI:
         print('Multi')
         multi()
     else:
         print('Single')
         single()
+    #print(anime_data)
 
 
 if __name__ == "__main__":
