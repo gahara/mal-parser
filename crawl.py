@@ -50,9 +50,9 @@ def scrape_batch_top_entires(url):
     for t in tmp:
         page = requests.get(t['href'])
         soup = BeautifulSoup(page.content, 'lxml')
-        ttt = soup.findAll('span', itemprop='GENRE_ITEMPROP')
+        genres_raw = soup.findAll('span', itemprop=GENRE_ITEMPROP)
         print(t['href'], t.string)
-        genres = list(map(lambda x: x.string, ttt))
+        genres = list(map(lambda x: x.string, genres_raw))
         print(genres)
         anime_data[t.string] = [t['href'], genres]
 
