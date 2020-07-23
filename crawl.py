@@ -8,7 +8,7 @@ MULTI = True
 DATA_FILENAME = 'data.json'
 
 STEP = 50
-MAX_COUNT = 100
+MAX_COUNT = 50
 '''
 Url is typically like https://myanimelist.net/topanime.php?limit=50
 '''
@@ -51,10 +51,9 @@ def scrape_batch_top_entires(url):
         page = requests.get(t['href'])
         soup = BeautifulSoup(page.content, 'lxml')
         genres_raw = soup.findAll('span', itemprop=GENRE_ITEMPROP)
-        print(t['href'], t.string)
         genres = list(map(lambda x: x.string, genres_raw))
-        print(genres)
-        anime_data[t.string] = [t['href'], genres]
+        print(f'url: {t["href"]} # name: {t.string} # genres:{",".join(genres)}')
+        print('#########################')
 
 
 def multi():
@@ -84,12 +83,9 @@ def single():
 def main():
 
     if MULTI:
-        print('Multi')
         multi()
     else:
-        print('Single')
         single()
-    #print(anime_data)
 
 
 if __name__ == "__main__":
